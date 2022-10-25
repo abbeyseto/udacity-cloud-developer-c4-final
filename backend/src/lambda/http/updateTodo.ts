@@ -8,20 +8,48 @@ import { updateTodo } from '../../businessLogic/todos'
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { getUserId } from '../utils'
 
+import { createLogger } from '../../utils/logger'
+
+const logger = createLogger('updateTodo')
+
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
-    const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
-    // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
+    logger.info('## UPDATE TODO ##')
+    try {
+      const todoId = event.pathParameters.todoId
+      const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
 
+      // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
+      const user = getUserId(event)
+      const updatedItem = await updateTodo(user, todoId, updatedTodo)
+      logger.info('## UPDATE TODO SUCCESSFULLY ##')
+      return {
+        statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': true
+        },
+        body: JSON.stringify({
+          message: 'Todo had been update!',
+          item: updatedItem
+        })
+      }
+    } catch (error) {
+      logger.error('## UPDATE TODO FAILED ##', { error })
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          message: 'System errors',
+          error: error
 
-    return undefined
+        })
+      }
+    }
+  }
 )
 
-handler
-  .use(httpErrorHandler())
-  .use(
-    cors({
-      credentials: true
-    })
-  )
+handler.use(httpErrorHandler()).use(
+  cors({
+    credentials: true
+  })
+)
