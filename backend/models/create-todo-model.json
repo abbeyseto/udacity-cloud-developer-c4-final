@@ -4,10 +4,15 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 200,
+      "pattern": "^[a-zA-Z0-9_\\-\\s]+$"
     },
     "dueDate": {
-      "type": "string"
+      "type": "string",
+      "format": "date-time",
+      "minLength": 5
     }
   },
   "required": [

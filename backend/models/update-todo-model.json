@@ -4,13 +4,17 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 200,
+      "pattern": "^[a-zA-Z0-9_\\-\\s]+$"
     },
     "dueDate": {
       "type": "string"
     },
     "done": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     }
   },
   "required": [
