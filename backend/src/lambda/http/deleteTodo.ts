@@ -19,7 +19,7 @@ export const handler = middy(
       
       // TODO: Remove a TODO item by id
       const user = getUserId(event);
-      const deletedItem = await deleteTodo(todoId,user);
+      const deletedItem = await deleteTodo(user, todoId);
       
       return {
         statusCode: 204,
